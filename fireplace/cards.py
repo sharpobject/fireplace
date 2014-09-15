@@ -135,6 +135,12 @@ class Card(object):
 			logging.info("Triggering Deathrattle for %r" % (self))
 			self.data.__class__.deathrattle(self)
 
+	def choose(self, id):
+		assert id in self.data.choose
+		card = Card(id)
+		logging.info("Choosing action %r on %r" % (card, self))
+		self._choose = card
+
 	def discard(self):
 		logging.info("Discarding %r" % (self))
 		self.zone = Zone.GRAVEYARD
