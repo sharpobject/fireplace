@@ -5,7 +5,8 @@ from ..card import *
 
 # Blood Imp
 class CS2_059(Card):
-	def onOwnTurnEnd(self):
+	@on("OWN_TURN_END")
+	def inPlay(self):
 		if self.controller.field:
 			random.choice(self.controller.field).buff("CS2_059o")
 

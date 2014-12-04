@@ -3,7 +3,8 @@ from ..card import *
 
 # Healing Totem
 class NEW1_009(Card):
-	def onOwnTurnEnd(self):
+	@on("OWN_TURN_END")
+	def inPlay(self):
 		targets = self.controller.getTargets(TARGET_FRIENDLY_MINIONS)
 		for target in targets:
 			self.heal(target, 1)
@@ -35,7 +36,8 @@ class EX1_565o(Card):
 
 # Mana Tide Totem
 class EX1_575(Card):
-	def onOwnTurnEnd(self):
+	@on("OWN_TURN_END")
+	def inPlay(self):
 		self.controller.draw()
 
 

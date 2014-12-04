@@ -31,7 +31,8 @@ class NEW1_017e(Card):
 
 # Doomsayer
 class NEW1_021(Card):
-	def onOwnTurnBegin(self):
+	@on("OWN_TURN_BEGIN")
+	def inPlay(self):
 		for target in self.controller.getTargets(TARGET_ALL_MINIONS):
 			target.destroy()
 

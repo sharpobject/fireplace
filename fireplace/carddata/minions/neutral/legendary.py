@@ -42,13 +42,15 @@ class EX1_249(Card):
 # Ragnaros the Firelord
 class EX1_298(Card):
 	cantAttack = True
-	def onTurnEnd(self, player):
+	@on("TURN_END")
+	def inPlay(self, player):
 		self.hit(random.choice(self.controller.getTargets(TARGET_ENEMY_CHARACTERS)), 8)
 
 
 # Nat Pagle
 class EX1_557(Card):
-	def onOwnTurnBegin(self):
+	@on("OWN_TURN_BEGIN")
+	def inPlay(self):
 		if random.choice((0, 1)):
 			self.controller.draw()
 
@@ -75,7 +77,8 @@ class EX1_577(Card):
 
 # Illidan Stormrage
 class EX1_614(Card):
-	def onOwnCardPlayed(self, card):
+	@on("OWN_CARD_PLAYED")
+	def inPlay(self, card):
 		self.controller.summon("EX1_614t")
 
 
