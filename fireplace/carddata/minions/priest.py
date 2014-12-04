@@ -1,3 +1,4 @@
+from fireplace.enums import Zone
 from ..card import *
 
 
@@ -10,7 +11,7 @@ class EX1_091(Card):
 # Lightspawn
 class EX1_335(Card):
 	def update(self):
-		if self.atk != self.health:
+		if self.zone == Zone.PLAY and self.atk != self.health:
 			# self.atk = self.health
 			# Haha! You thought this would be that easy, huh? THINK AGAIN!
 			# Attack is the sum of the ATK of the entity and all its slots.
