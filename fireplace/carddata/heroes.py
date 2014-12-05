@@ -86,6 +86,12 @@ class CS2_056(Card):
 class HERO_08(Card):
 	power = "CS2_034"
 
+	@on("TURN_BEGIN")
+	def inPlay(self):
+		# destroy a random enemy minion every turn
+		if self.controller.field:
+			random.choice(self.controller.field).destroy()
+
 # Fireblast
 class CS2_034(Card):
 	action = damageTarget(1)
