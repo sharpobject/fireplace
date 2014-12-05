@@ -123,6 +123,11 @@ class Game(Entity):
 		self.player2.addToHand(Card(THE_COIN))
 		self.broadcast("onTurnBegin", self.player1)
 
+	def endTurn(self):
+		logging.info("%s ends turn" % (self.currentPlayer))
+		self.broadcast("onTurnEnd", self.currentPlayer)
+		self.broadcast("onTurnBegin", self.currentPlayer.opponent)
+
 	def broadcast(self, event, *args):
 		logging.debug("Broadcasting event %r to %r with arguments %r" % (event, self.entities, args))
 		for entity in chain([self], self.players, self.entities, self.auras):
@@ -131,12 +136,18 @@ class Game(Entity):
 		if event != "onUpdate":
 			self.broadcast("onUpdate")
 
-	def onUpdate(self):
+	##
+	# Events
+
+	@on("UPDATE")
+	def inGame(self):
 		for card in self.board:
 			if card.health == 0:
 				card.destroy()
 
-	def onTurnBegin(self, player):
+	@on("TURN_BEGIN")
+	def inGame(self, player):
+		self.status = self.STATUS_TURN
 		self.turn += 1
 		logging.info("%s begins turn %i" % (player, self.turn))
 		if self.turn == self.MAX_TURNS:
@@ -145,8 +156,3 @@ class Game(Entity):
 			self.currentPlayer.currentPlayer = False
 		self.currentPlayer = player
 		self.currentPlayer.currentPlayer = True
-
-	def endTurn(self):
-		logging.info("%s ends turn" % (self.currentPlayer))
-		self.broadcast("onTurnEnd", self.currentPlayer)
-		self.broadcast("onTurnBegin", self.currentPlayer.opponent)
