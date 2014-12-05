@@ -166,48 +166,9 @@ class Card(Entity):
 	##
 	# Events
 
-	def _forwardBroadcast(self, event, *args, **kwargs):
-		if hasattr(self.data.__class__, event):
-			return getattr(self.data.__class__, event)(self, *args, **kwargs)
-
-	def onCardPlayed(self, player, card):
-		if player is self.controller:
-			self.onOwnCardPlayed(card)
-		self._forwardBroadcast("onCardPlayed", player, card)
-
-	def onOwnCardPlayed(self, card):
-		self._forwardBroadcast("onOwnCardPlayed", card)
-
-	def afterCardPlayed(self, player, card):
-		if player is self.controller:
-			self.afterOwnCardPlayed(card)
-		self._forwardBroadcast("afterCardPlayed", player, card)
-
-	def afterOwnCardPlayed(self, card):
-		self._forwardBroadcast("afterOwnCardPlayed", card)
-
-	def onTurnBegin(self, player):
-		if player is self.controller:
-			self.onOwnTurnBegin()
-		self._forwardBroadcast("onTurnBegin", player)
-
-	def onOwnTurnBegin(self):
+	@on("OWN_TURN_BEGIN")
+	def inPlay(self):
 		self.exhausted = False
-		self._forwardBroadcast("onOwnTurnBegin")
-
-	def onTurnEnd(self, player):
-		if player is self.controller:
-			self.onOwnTurnEnd()
-		self._forwardBroadcast("onTurnEnd", player)
-
-	def onOwnTurnEnd(self):
-		self._forwardBroadcast("onOwnTurnEnd")
-
-	def setTag(self, *args):
-		# Fire an onOwnUpdate every time a tag is set while in play
-		super().setTag(*args)
-		if self.zone == Zone.PLAY:
-			self._forwardBroadcast("onOwnUpdate")
 
 	def discard(self):
 		logging.info("Discarding %r" % (self))
@@ -247,7 +208,6 @@ class Card(Entity):
 		Helper for Player.summon(buff, minion)
 		"""
 		ret = self.controller.summon(card, target=self)
-		self._forwardBroadcast("onOwnUpdate")
 
 
 def cardsForHero(hero):
@@ -309,25 +269,25 @@ class Character(Card):
 
 		self.setTag(GameTag.DAMAGE, amount)
 
-	def onOwnTurnBegin(self):
+	@on("OWN_TURN_BEGIN")
+	def inPlay(self):
 		self.setTag(GameTag.NUM_ATTACKS_THIS_TURN, 0)
-		super().onOwnTurnBegin()
 
-	def onOwnTurnEnd(self):
+	@on("OWN_TURN_END")
+	def inPlay(self):
 		if self.frozen and not self.tags[GameTag.NUM_ATTACKS_THIS_TURN]:
 			self.frozen = False
-		super().onOwnTurnEnd()
 
-	def onDamage(self, amount, source):
-		logging.info("%r onDamage event (amount=%r, source=%r)" % (self, amount, source))
+	@on("SELF_DAMAGE")
+	def inPlay(self, amount, source):
 		self.damage += amount
 
 		# FIXME this should happen in a separate tick
 		if not self.health:
 			self.destroy()
 
-	def onHeal(self, amount, source):
-		logging.info("%r onHeal event (amount=%r, source=%r)" % (self, amount, source))
+	@on("SELF_HEAL")
+	def inPlay(self, amount, source):
 		self.damage -= amount
 
 	def silence(self):
@@ -351,12 +311,12 @@ class Character(Card):
 class Hero(Character):
 	armor = _TAG(GameTag.ARMOR, 0)
 
-	def onDamage(self, amount, source):
+	@on("SELF_DAMAGE")
+	def inPlay(self, amount, source):
 		if self.armor:
 			newAmount = max(0, amount - self.armor)
 			self.armor -= min(self.armor, amount)
 			amount = newAmount
-		super().onDamage(amount, source)
 
 	def destroy(self):
 		raise GameOver("%s wins!" % (self.controller.opponent))
@@ -416,12 +376,12 @@ class Minion(Character):
 				self.damage = 0
 		super().moveToZone(old, new)
 
-	def onDamage(self, amount, source):
+	@on("SELF_DAMAGE")
+	def inPlay(self, amount, source):
 		if self.divineShield:
 			self.divineShield = False
 			logging.info("%r's divine shield prevents %i damage. Divine shield fades." % (self, amount))
 			return
-		super().onDamage(amount, source)
 		if isinstance(source, Minion) and source.poisonous:
 			logging.info("%r is destroyed because of %r is poisonous" % (self, source))
 			self.destroy()
@@ -482,11 +442,11 @@ class Enchantment(Card):
 			self.data.__class__.deathrattle(self)
 		super().destroy()
 
-	def onTurnEnd(self, player):
+	@on("TURN_END")
+	def inPlay(self, *args):
 		if self.data.oneTurnEffect:
 			logging.info("Ending One-Turn effect: %r" % (self))
 			self.destroy()
-		super().onTurnEnd(player)
 
 
 class Aura(Card):
