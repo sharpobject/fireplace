@@ -147,11 +147,11 @@ class Card(Entity):
 
 	def heal(self, target, amount):
 		logging.info("%r heals %r for %i" % (self, target, amount))
-		target.onHeal(amount, self)
+		self.game.broadcast("HEAL", self, target, amount)
 
 	def hit(self, target, amount):
 		logging.info("%r hits %r for %i" % (self, target, amount))
-		target.onDamage(amount, self)
+		self.game.broadcast("DAMAGE", self, target, amount)
 
 	def destroy(self):
 		logging.info("%r dies" % (self))

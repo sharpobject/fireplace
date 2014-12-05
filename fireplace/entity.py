@@ -15,26 +15,19 @@ class Entity(object):
 
 	def __new__(cls, *args, **kwargs):
 		instance = super().__new__(cls)
-		cls._zoneListeners = {}
 		cls._eventListeners = {}
 		for name, func in cls.__dict__.items():
-			if name == "inPlay":
+			if name.isupper() and hasattr(func, "__call__"):
 				# TODO multiple defs for same zone
-				cls._zoneListeners[Zone.PLAY] = {func.event: func}
-			elif name == "inGame":
-				cls._eventListeners[func.event] = func
+				cls._eventListeners[name] = [func]
 		return instance
 
 	def broadcast(self, event, *args):
 		for entity in self.entities:
-			for zone, events in self._zoneListeners.items():
-				if self.zone == zone:
-					for k, func in events.items():
-						if event == k:
-							func(*args)
-			for k, func in self._eventListeners.items():
+			for k, funcs in self._eventListeners.items():
 				if event == k:
-					func(*args)
+					for f in funcs:
+						f(self, *args)
 		if event != "UPDATE":
 			self.broadcast("UPDATE")
 

@@ -10,7 +10,7 @@ class Card(XMLCard):
 		instance = super().__new__(cls)
 		cls._eventListeners = {}
 		for name, func in cls.__dict__.items():
-			if name == "inPlay":
+			if name.isupper() and hasattr(func, "__call__"):
 				# TODO multiple defs for same zone
-				cls._eventListeners[Zone.PLAY] = {func.event: func}
+				cls._eventListeners[name] = [func]
 		return instance

@@ -199,3 +199,9 @@ class Player(Entity):
 	def TURN_END(self, *args):
 		if self.tempMana:
 			self.tempMana = 0
+
+	def OWN_DAMAGE(self, source, target, amount):
+		target.broadcast("SELF_DAMAGE", source, amount)
+
+	def OWN_HEAL(self, source, target, amount):
+		target.broadcast("SELF_HEAL", source, amount)
