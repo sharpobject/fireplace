@@ -24,10 +24,10 @@ class Entity(object):
 
 	def broadcast(self, event, *args):
 		for entity in self.entities:
-			for k, funcs in self._eventListeners.items():
+			for k, funcs in entity._eventListeners.items():
 				if event == k:
 					for f in funcs:
-						f(self, *args)
+						f(entity, *args)
 		if event != "UPDATE":
 			self.broadcast("UPDATE")
 

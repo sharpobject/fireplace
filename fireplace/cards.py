@@ -59,7 +59,7 @@ class Card(Entity):
 
 	@property
 	def entities(self):
-		return chain([self, self.slots])
+		return chain([self], self.slots)
 
 	@property
 	def game(self):

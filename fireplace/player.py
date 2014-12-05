@@ -38,7 +38,7 @@ class Player(Entity):
 
 	@property
 	def entities(self):
-		return chain([self, self.hero, self.field, self.secrets])
+		return chain([self, self.hero], self.field, self.secrets)
 
 	@property
 	def opponent(self):
