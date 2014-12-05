@@ -187,8 +187,7 @@ class Player(Entity):
 	##
 	# Events
 
-	@on("OWN_TURN_BEGIN")
-	def inGame(self):
+	def OWN_TURN_BEGIN(self):
 		self.combo = False
 		self.setTag(GameTag.NUM_CARDS_PLAYED_THIS_TURN, 0)
 		self.maxMana += 1
@@ -197,7 +196,6 @@ class Player(Entity):
 			self.overloaded = 0
 		self.draw()
 
-	@on("TURN_END")
-	def inGame(self, *args):
+	def TURN_END(self, *args):
 		if self.tempMana:
 			self.tempMana = 0

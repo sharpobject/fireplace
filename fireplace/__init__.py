@@ -131,14 +131,12 @@ class Game(Entity):
 	##
 	# Events
 
-	@on("UPDATE")
-	def inGame(self):
+	def UPDATE(self):
 		for card in self.board:
 			if card.health == 0:
 				card.destroy()
 
-	@on("TURN_BEGIN")
-	def inGame(self, player):
+	def TURN_BEGIN(self, player):
 		self.status = self.STATUS_TURN
 		self.turn += 1
 		logging.info("%s begins turn %i" % (player, self.turn))

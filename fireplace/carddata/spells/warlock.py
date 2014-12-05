@@ -67,8 +67,7 @@ class EX1_316(Card):
 class EX1_316e(Card):
 	Atk = 4
 	Health = 4
-	@on("TURN_END")
-	def inPlay(self, player):
+	def TURN_END(self, player):
 		self.owner.destroy()
 
 

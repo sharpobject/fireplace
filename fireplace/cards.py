@@ -170,8 +170,7 @@ class Card(Entity):
 	##
 	# Events
 
-	@on("OWN_TURN_BEGIN")
-	def inPlay(self):
+	def OWN_TURN_BEGIN(self):
 		self.exhausted = False
 
 	def discard(self):
@@ -273,25 +272,21 @@ class Character(Card):
 
 		self.setTag(GameTag.DAMAGE, amount)
 
-	@on("OWN_TURN_BEGIN")
-	def inPlay(self):
+	def OWN_TURN_BEGIN(self):
 		self.setTag(GameTag.NUM_ATTACKS_THIS_TURN, 0)
 
-	@on("OWN_TURN_END")
-	def inPlay(self):
+	def OWN_TURN_END(self):
 		if self.frozen and not self.tags[GameTag.NUM_ATTACKS_THIS_TURN]:
 			self.frozen = False
 
-	@on("SELF_DAMAGE")
-	def inPlay(self, amount, source):
+	def SELF_DAMAGE(self, amount, source):
 		self.damage += amount
 
 		# FIXME this should happen in a separate tick
 		if not self.health:
 			self.destroy()
 
-	@on("SELF_HEAL")
-	def inPlay(self, amount, source):
+	def SELF_HEAL(self, amount, source):
 		self.damage -= amount
 
 	def silence(self):
@@ -315,8 +310,7 @@ class Character(Card):
 class Hero(Character):
 	armor = _TAG(GameTag.ARMOR, 0)
 
-	@on("SELF_DAMAGE")
-	def inPlay(self, amount, source):
+	def SELF_DAMAGE(self, amount, source):
 		if self.armor:
 			newAmount = max(0, amount - self.armor)
 			self.armor -= min(self.armor, amount)
@@ -380,8 +374,7 @@ class Minion(Character):
 				self.damage = 0
 		super().moveToZone(old, new)
 
-	@on("SELF_DAMAGE")
-	def inPlay(self, amount, source):
+	def SELF_DAMAGE(self, amount, source):
 		if self.divineShield:
 			self.divineShield = False
 			logging.info("%r's divine shield prevents %i damage. Divine shield fades." % (self, amount))
@@ -446,8 +439,7 @@ class Enchantment(Card):
 			self.data.__class__.deathrattle(self)
 		super().destroy()
 
-	@on("TURN_END")
-	def inPlay(self, *args):
+	def TURN_END(self, *args):
 		if self.data.oneTurnEffect:
 			logging.info("Ending One-Turn effect: %r" % (self))
 			self.destroy()
