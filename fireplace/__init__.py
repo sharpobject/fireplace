@@ -82,7 +82,7 @@ class Game(Entity):
 
 	@property
 	def entities(self):
-		return self.player1.entities + self.player2.entities
+		return chain([self], self.auras, self.player1.entities, self.player2.entities)
 
 	turn = _TAG(GameTag.TURN, 0)
 
@@ -121,20 +121,12 @@ class Game(Entity):
 		logging.info("Entering mulligan phase")
 		logging.info("%s gets The Coin (%s)" % (self.player2, THE_COIN))
 		self.player2.addToHand(Card(THE_COIN))
-		self.broadcast("onTurnBegin", self.player1)
+		self.broadcast("TURN_BEGIN", self.player1)
 
 	def endTurn(self):
 		logging.info("%s ends turn" % (self.currentPlayer))
-		self.broadcast("onTurnEnd", self.currentPlayer)
-		self.broadcast("onTurnBegin", self.currentPlayer.opponent)
-
-	def broadcast(self, event, *args):
-		logging.debug("Broadcasting event %r to %r with arguments %r" % (event, self.entities, args))
-		for entity in chain([self], self.players, self.entities, self.auras):
-			if entity and hasattr(entity, event):
-				getattr(entity, event)(*args)
-		if event != "onUpdate":
-			self.broadcast("onUpdate")
+		self.broadcast("TURN_END", self.currentPlayer)
+		self.broadcast("TURN_BEGIN", self.currentPlayer.opponent)
 
 	##
 	# Events
