@@ -1,6 +1,6 @@
 import logging
 from .cards import Card
-from .entity import Entity
+from .entity import Entity, on
 from .enums import CardType, GameTag, Zone
 from .targeting import *
 from .utils import CardList, _TAG

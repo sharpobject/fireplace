@@ -1,16 +1,8 @@
 from ..targeting import *
 from ..enums import Zone
 from ..xmlcard import XMLCard
+from ..entity import on
 from .helpers import *
-
-
-def on(event):
-	def decorator(func):
-		def wrapper(*args, **kwargs):
-			func(*args, **kwargs)
-		wrapper.event = event
-		return wrapper
-	return decorator
 
 
 class Card(XMLCard):

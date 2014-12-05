@@ -3,7 +3,7 @@ import logging
 from itertools import chain
 from . import targeting
 from .exceptions import *
-from .entity import Entity
+from .entity import Entity, on
 from .enums import CardType, GameTag, PlayReq, Race, Zone
 from .utils import _TAG, CardList
 from .xmlcard import XMLCard

@@ -1,6 +1,26 @@
+from .enums import Zone
+
+def on(event):
+	def decorator(func):
+		def wrapper(*args, **kwargs):
+			func(*args, **kwargs)
+		wrapper.event = event
+		return wrapper
+	return decorator
+
+
 class Entity(object):
 	def __init__(self):
 		self.tags = {}
+
+	def __new__(cls, *args, **kwargs):
+		instance = super().__new__(cls)
+		cls._eventListeners = {}
+		for name, func in cls.__dict__.items():
+			if name == "inPlay":
+				# TODO multiple defs for same zone
+				cls._eventListeners[Zone.PLAY] = {func.event: func}
+		return instance
 
 	def setTag(self, tag, value):
 		self.tags[tag] = value
