@@ -137,7 +137,6 @@ class Game(Entity):
 				card.destroy()
 
 	def TURN_BEGIN(self, player):
-		self.status = self.STATUS_TURN
 		self.turn += 1
 		logging.info("%s begins turn %i" % (player, self.turn))
 		if self.turn == self.MAX_TURNS:
