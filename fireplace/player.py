@@ -1,4 +1,5 @@
 import logging
+from itertools import chain
 from .cards import Card
 from .entity import Entity, on
 from .enums import CardType, GameTag, Zone
@@ -37,11 +38,7 @@ class Player(Entity):
 
 	@property
 	def entities(self):
-		field = self.field
-		ret = [self.hero, self.hero.weapon, self.hero.power] + field + self.hero.slots + self.secrets
-		for entity in field:
-			ret += entity.slots
-		return ret
+		return chain([self, self.hero, self.field, self.secrets])
 
 	@property
 	def opponent(self):

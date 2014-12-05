@@ -58,6 +58,10 @@ class Card(Entity):
 		return super().__eq__(other)
 
 	@property
+	def entities(self):
+		return chain([self, self.slots])
+
+	@property
 	def game(self):
 		return self.controller.game
 
