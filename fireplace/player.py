@@ -167,7 +167,7 @@ class Player(Entity):
 		"""
 		logging.info("%s plays %r from their hand" % (self, card))
 		assert card.controller
-		self.game.broadcast("onCardPlayed", self, card)
+		self.game.broadcast("CARD_PLAYED", self, card)
 		cost = card.cost
 		if self.tempMana:
 			# The coin, Innervate etc
@@ -185,13 +185,16 @@ class Player(Entity):
 			card.action(target, combo=None)
 			self.combo = True
 		self.tags[GameTag.NUM_CARDS_PLAYED_THIS_TURN] += 1
-		self.game.broadcast("afterCardPlayed", self, card)
-		self.game.broadcast("onUpdate")
+		self.game.broadcast("AFTER_CARD_PLAYED", self, card)
 
 	##
 	# Events
 
-	events = ["OWN_TURN_BEGIN", "TURN_END", "OWN_DAMAGE", "OWN_HEAL"]
+	events = [
+		"OWN_TURN_BEGIN", "TURN_END",
+		"OWN_DAMAGE", "OWN_HEAL",
+		"CARD_PLAYED", "AFTER_CARD_PLAYED"
+	]
 
 	def OWN_TURN_BEGIN(self):
 		self.combo = False
@@ -211,3 +214,9 @@ class Player(Entity):
 
 	def OWN_HEAL(self, source, target, amount):
 		target.broadcast("SELF_HEAL", source, amount)
+
+	def CARD_PLAYED(self, player, card):
+		card.controller.broadcast("OWN_CARD_PLAYED", card)
+
+	def AFTER_CARD_PLAYED(self, player, card):
+		card.controller.broadcast("AFTER_OWN_CARD_PLAYED", card)
