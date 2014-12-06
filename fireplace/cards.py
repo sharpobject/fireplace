@@ -180,7 +180,13 @@ class Card(Entity):
 	##
 	# Events
 
-	events = ["UPDATE", "OWN_TURN_BEGIN", "OWN_TURN_END", "OWN_MINION_DESTROYED", "SELF_DAMAGE", "SELF_HEAL"]
+	events = [
+		"UPDATE",
+		"TURN_BEGIN", "TURN_END",
+		"OWN_TURN_BEGIN", "OWN_TURN_END",
+		"OWN_MINION_DESTROYED",
+		"SELF_DAMAGE", "SELF_HEAL"
+	]
 
 	def OWN_TURN_BEGIN(self):
 		self.exhausted = False

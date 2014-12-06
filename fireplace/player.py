@@ -37,7 +37,12 @@ class Player(Entity):
 
 	@property
 	def entities(self):
-		return chain([self, self.hero], self.field, self.secrets)
+		ret = []
+		for entity in self.field:
+			ret += entity.entities
+		for entity in self.secrets:
+			ret += entity.entities
+		return chain([self], list(self.hero.entities), ret)
 
 	@property
 	def opponent(self):
