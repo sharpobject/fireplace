@@ -489,7 +489,7 @@ class Aura(Card):
 			return self.data.__class__.isValidTarget(self, card)
 		return True
 
-	def onUpdate(self):
+	def UPDATE(self):
 		for target in self.targets:
 			if self.isValidTarget(target):
 				if not target in self._buffed:
