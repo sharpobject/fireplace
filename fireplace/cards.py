@@ -3,7 +3,7 @@ import logging
 from itertools import chain
 from . import targeting
 from .exceptions import *
-from .entity import Entity, on
+from .entity import Entity
 from .enums import CardType, GameTag, PlayReq, Race, Zone
 from .utils import _TAG, CardList
 from .xmlcard import XMLCard
@@ -34,6 +34,13 @@ class Card(Entity):
 		super(Card, cls).__init__(card)
 		card.data = data
 		card.tags = data.tags
+		for event in card.events:
+			if hasattr(data, event):
+				if event not in card._eventListeners:
+					card._eventListeners[event] = []
+				# A bit of magic powder to pass the Card object as self to the Card defs
+				func = getattr(data.__class__, event)
+				card._eventListeners[event].append(lambda *args: func(card, *args))
 		return card
 
 	def __init__(self, id):
@@ -170,7 +177,7 @@ class Card(Entity):
 	##
 	# Events
 
-	events = ["OWN_TURN_BEGIN", "OWN_TURN_END", "SELF_DAMAGE", "SELF_HEAL"]
+	events = ["UPDATE", "OWN_TURN_BEGIN", "OWN_TURN_END", "SELF_DAMAGE", "SELF_HEAL"]
 
 	def OWN_TURN_BEGIN(self):
 		self.exhausted = False
@@ -461,6 +468,7 @@ class Aura(Card):
 		self._buffs = []
 		self.data = XMLCard.get(id)
 		self.tags = self.data.tags
+		self._eventListeners = []
 
 	@property
 	def targets(self):

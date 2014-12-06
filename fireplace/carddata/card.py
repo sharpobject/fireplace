@@ -1,7 +1,6 @@
 from ..targeting import *
 from ..enums import Zone
 from ..xmlcard import XMLCard
-from ..entity import on
 from .helpers import *
 
 

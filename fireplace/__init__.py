@@ -3,7 +3,7 @@ import random
 from itertools import chain
 from . import heroes
 from .cards import Card, cardsForHero, THE_COIN
-from .entity import Entity, on
+from .entity import Entity
 from .enums import GameTag, Zone
 from .exceptions import *
 from .player import Player

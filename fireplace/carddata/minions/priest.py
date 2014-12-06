@@ -10,7 +10,7 @@ class EX1_091(Card):
 
 # Lightspawn
 class EX1_335(Card):
-	def update(self):
+	def UPDATE(self):
 		if self.zone == Zone.PLAY and self.atk != self.health:
 			# self.atk = self.health
 			# Haha! You thought this would be that easy, huh? THINK AGAIN!

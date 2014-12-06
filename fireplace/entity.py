@@ -1,14 +1,5 @@
 from .enums import Zone
 
-def on(event):
-	def decorator(func):
-		def wrapper(*args, **kwargs):
-			func(*args, **kwargs)
-		wrapper.event = event
-		return wrapper
-	return decorator
-
-
 class Entity(object):
 	def __init__(self):
 		self.tags = {}
@@ -20,7 +11,6 @@ class Entity(object):
 			# TODO multiple defs for same event
 			if func:
 				self._eventListeners[name] = [func]
-
 
 	def broadcast(self, event, *args):
 		for entity in self.entities:
