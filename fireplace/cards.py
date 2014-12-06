@@ -166,6 +166,8 @@ class Card(Entity):
 		if self.hasDeathrattle:
 			logging.info("Triggering Deathrattle for %r" % (self))
 			self.data.__class__.deathrattle(self)
+		for buff in self.buffs:
+			buff.destroy()
 
 	def moveToZone(self, old, new):
 		logging.debug("%r moves from %r to %r" % (self, old, new))
@@ -448,7 +450,6 @@ class Enchantment(Card):
 			# If we have a deathrattle, it means the deathrattle is on the owner.
 			logging.info("Triggering Enchantment Deathrattle for %r" % (self))
 			self.data.__class__.deathrattle(self)
-		super().destroy()
 
 	def TURN_END(self, *args):
 		if self.data.oneTurnEffect:
