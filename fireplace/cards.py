@@ -286,6 +286,7 @@ class Character(Card):
 
 	def OWN_TURN_BEGIN(self):
 		self.setTag(GameTag.NUM_ATTACKS_THIS_TURN, 0)
+		super().OWN_TURN_BEGIN()
 
 	def OWN_TURN_END(self):
 		if self.frozen and not self.tags[GameTag.NUM_ATTACKS_THIS_TURN]:
