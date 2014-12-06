@@ -464,11 +464,11 @@ class Aura(Card):
 
 	def __init__(self, id):
 		super().__init__(id)
+		Entity.__init__(self) # HACK
 		self._buffed = CardList()
 		self._buffs = []
 		self.data = XMLCard.get(id)
 		self.tags = self.data.tags
-		self._eventListeners = []
 
 	@property
 	def targets(self):
