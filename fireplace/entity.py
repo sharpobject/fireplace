@@ -12,22 +12,21 @@ def on(event):
 class Entity(object):
 	def __init__(self):
 		self.tags = {}
+		self._eventListeners = {}
 
-	def __new__(cls, *args, **kwargs):
-		instance = super().__new__(cls)
-		cls._eventListeners = {}
-		for name, func in cls.__dict__.items():
-			if name.isupper() and hasattr(func, "__call__"):
-				# TODO multiple defs for same zone
-				cls._eventListeners[name] = [func]
-		return instance
+		# Register the events
+		for name in self.events:
+			func = getattr(self, name, None)
+			# TODO multiple defs for same event
+			if func:
+				self._eventListeners[name] = [func]
+
 
 	def broadcast(self, event, *args):
 		for entity in self.entities:
-			for k, funcs in entity._eventListeners.items():
-				if event == k:
-					for f in funcs:
-						f(entity, *args)
+			if event in entity._eventListeners:
+				for f in entity._eventListeners[event]:
+					f(*args)
 		if event != "UPDATE":
 			self.broadcast("UPDATE")
 

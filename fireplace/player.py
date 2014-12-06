@@ -13,7 +13,6 @@ class Player(Entity):
 
 	def __init__(self, name, deck):
 		self.name = name
-		super().__init__()
 		self.deck = deck
 		self.deck.hero.controller = self
 		self.hand = CardList()
@@ -186,6 +185,8 @@ class Player(Entity):
 
 	##
 	# Events
+
+	events = ["OWN_TURN_BEGIN", "TURN_END", "OWN_DAMAGE", "OWN_HEAL"]
 
 	def OWN_TURN_BEGIN(self):
 		self.combo = False

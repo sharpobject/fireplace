@@ -131,6 +131,8 @@ class Game(Entity):
 	##
 	# Events
 
+	events = ["UPDATE", "TURN_BEGIN", "DAMAGE", "HEAL"]
+
 	def UPDATE(self):
 		for card in self.board:
 			if card.health == 0:
@@ -145,6 +147,7 @@ class Game(Entity):
 			self.currentPlayer.currentPlayer = False
 		self.currentPlayer = player
 		self.currentPlayer.currentPlayer = True
+		player.broadcast("OWN_TURN_BEGIN")
 
 	def DAMAGE(self, source, target, amount):
 		source.controller.broadcast("OWN_DAMAGE", source, target, amount)

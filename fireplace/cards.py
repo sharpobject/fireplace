@@ -170,6 +170,8 @@ class Card(Entity):
 	##
 	# Events
 
+	events = ["OWN_TURN_BEGIN", "OWN_TURN_END", "SELF_DAMAGE", "SELF_HEAL"]
+
 	def OWN_TURN_BEGIN(self):
 		self.exhausted = False
 
@@ -279,14 +281,14 @@ class Character(Card):
 		if self.frozen and not self.tags[GameTag.NUM_ATTACKS_THIS_TURN]:
 			self.frozen = False
 
-	def SELF_DAMAGE(self, amount, source):
+	def SELF_DAMAGE(self, source, amount):
 		self.damage += amount
 
 		# FIXME this should happen in a separate tick
 		if not self.health:
 			self.destroy()
 
-	def SELF_HEAL(self, amount, source):
+	def SELF_HEAL(self, source, amount):
 		self.damage -= amount
 
 	def silence(self):
@@ -310,11 +312,12 @@ class Character(Card):
 class Hero(Character):
 	armor = _TAG(GameTag.ARMOR, 0)
 
-	def SELF_DAMAGE(self, amount, source):
+	def SELF_DAMAGE(self, source, amount):
 		if self.armor:
 			newAmount = max(0, amount - self.armor)
 			self.armor -= min(self.armor, amount)
 			amount = newAmount
+		super().SELF_DAMAGE(source, amount)
 
 	def destroy(self):
 		raise GameOver("%s wins!" % (self.controller.opponent))
@@ -374,7 +377,7 @@ class Minion(Character):
 				self.damage = 0
 		super().moveToZone(old, new)
 
-	def SELF_DAMAGE(self, amount, source):
+	def SELF_DAMAGE(self, source, amount):
 		if self.divineShield:
 			self.divineShield = False
 			logging.info("%r's divine shield prevents %i damage. Divine shield fades." % (self, amount))
@@ -382,6 +385,7 @@ class Minion(Character):
 		if isinstance(source, Minion) and source.poisonous:
 			logging.info("%r is destroyed because of %r is poisonous" % (self, source))
 			self.destroy()
+		super().SELF_DAMAGE(source, amount)
 
 	def isPlayable(self):
 		playable = super().isPlayable()
