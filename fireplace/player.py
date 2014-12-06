@@ -216,7 +216,9 @@ class Player(Entity):
 		target.broadcast("SELF_HEAL", source, amount)
 
 	def CARD_PLAYED(self, player, card):
-		card.controller.broadcast("OWN_CARD_PLAYED", card)
+		if player is self:
+			card.controller.broadcast("OWN_CARD_PLAYED", card)
 
 	def AFTER_CARD_PLAYED(self, player, card):
-		card.controller.broadcast("AFTER_OWN_CARD_PLAYED", card)
+		if player is self:
+			card.controller.broadcast("AFTER_OWN_CARD_PLAYED", card)
