@@ -4,7 +4,7 @@ from itertools import chain
 from . import heroes
 from .cards import Card, cardsForHero, THE_COIN
 from .entity import Entity
-from .enums import GameTag, Zone
+from .enums import CardType, GameTag, Zone
 from .exceptions import *
 from .player import Player
 from .utils import _TAG
@@ -131,7 +131,7 @@ class Game(Entity):
 	##
 	# Events
 
-	events = ["UPDATE", "TURN_BEGIN", "DAMAGE", "HEAL"]
+	events = ["UPDATE", "TURN_BEGIN", "DAMAGE", "HEAL", "CARD_DESTROYED", "MINION_DESTROYED"]
 
 	def UPDATE(self):
 		for card in self.board:
@@ -154,3 +154,11 @@ class Game(Entity):
 
 	def HEAL(self, source, target, amount):
 		source.controller.broadcast("OWN_HEAL", source, target, amount)
+
+	def MINION_DESTROYED(self, minion):
+		minion.controller.broadcast("OWN_MINION_DESTROYED", minion)
+
+	def CARD_DESTROYED(self, card):
+		card.controller.broadcast("OWN_CARD_DESTROYED", card)
+		if card.type == CardType.MINION:
+			self.broadcast("MINION_DESTROYED", card)

@@ -168,6 +168,7 @@ class Card(Entity):
 			self.data.__class__.deathrattle(self)
 		for buff in self.buffs:
 			buff.destroy()
+		self.game.broadcast("CARD_DESTROYED", self)
 
 	def moveToZone(self, old, new):
 		logging.debug("%r moves from %r to %r" % (self, old, new))
@@ -179,7 +180,7 @@ class Card(Entity):
 	##
 	# Events
 
-	events = ["UPDATE", "OWN_TURN_BEGIN", "OWN_TURN_END", "SELF_DAMAGE", "SELF_HEAL"]
+	events = ["UPDATE", "OWN_TURN_BEGIN", "OWN_TURN_END", "OWN_MINION_DESTROYED", "SELF_DAMAGE", "SELF_HEAL"]
 
 	def OWN_TURN_BEGIN(self):
 		self.exhausted = False
