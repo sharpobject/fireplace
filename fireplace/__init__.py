@@ -131,7 +131,7 @@ class Game(Entity):
 	##
 	# Events
 
-	events = ["UPDATE", "TURN_BEGIN", "DAMAGE", "HEAL", "CARD_DESTROYED", "MINION_DESTROYED"]
+	events = ["UPDATE", "TURN_BEGIN", "TURN_END", "DAMAGE", "HEAL", "CARD_DESTROYED", "MINION_DESTROYED"]
 
 	def UPDATE(self):
 		for card in self.board:
@@ -148,6 +148,9 @@ class Game(Entity):
 		self.currentPlayer = player
 		self.currentPlayer.currentPlayer = True
 		player.broadcast("OWN_TURN_BEGIN")
+
+	def TURN_END(self, player):
+		player.broadcast("OWN_TURN_END")
 
 	def DAMAGE(self, source, target, amount):
 		source.controller.broadcast("OWN_DAMAGE", source, target, amount)
