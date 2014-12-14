@@ -207,6 +207,13 @@ class EX1_283(Card):
 		target.frozen = True
 
 
+# Raging Worgen
+class EX1_412(Card):
+	class Enrage(Card):
+		Atk = 2
+		Windfury = True
+
+
 # Murloc Tidehunter
 class EX1_506(Card):
 	action = summonMinion("EX1_506a")

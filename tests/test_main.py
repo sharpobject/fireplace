@@ -7,6 +7,7 @@ from fireplace.heroes import *
 from fireplace.enums import *
 
 
+CIRCLE_OF_HEALING = "EX1_621"
 MOONFIRE = "CS2_008"
 WISP = "CS2_231"
 SPELLBENDERT = "tt_010a"
@@ -1191,6 +1192,25 @@ def test_murloc_tidecaller():
 	assert tidecaller.atk == 4
 
 
+def test_raging_worgen():
+	game = prepare_game()
+	worgen = game.currentPlayer.give("EX1_412")
+	game.endTurn(); game.endTurn()
+	game.endTurn(); game.endTurn()
+	worgen.play()
+	assert worgen.health == 3
+	assert worgen.atk == 3
+	assert not worgen.windfury
+	game.currentPlayer.give(MOONFIRE).play(target=worgen)
+	assert worgen.health == 2
+	assert worgen.atk == 4
+	assert worgen.windury
+	game.currentPlayer.give(CIRCLE_OF_HEALING).play()
+	assert worgen.health == 3
+	assert worgen.atk == 3
+	assert not worgen.windfury
+
+
 def test_ragnaros():
 	game = prepare_game()
 	ragnaros = game.currentPlayer.give("EX1_298")
@@ -1549,6 +1569,7 @@ def test_warlock():
 
 
 def main():
+	test_raging_worgen()
 	for name, f in globals().items():
 		if name.startswith("test_") and hasattr(f, "__call__"):
 			f()

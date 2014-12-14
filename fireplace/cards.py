@@ -19,7 +19,7 @@ class Card(Entity):
 		if cls is not Card:
 			return super().__new__(cls)
 		data = XMLCard.get(id)
-		type = {
+		cardtype = {
 			CardType.HERO: Hero,
 			CardType.MINION: Minion,
 			CardType.SPELL: Spell,
@@ -27,10 +27,10 @@ class Card(Entity):
 			CardType.WEAPON: Weapon,
 			CardType.HERO_POWER: HeroPower,
 		}[data.getTag(GameTag.CARDTYPE)]
-		if type is Spell and data.getTag(GameTag.SECRET):
-			type = Secret
-		card = type(id)
-		# type(id) triggers __init__, so we can't rely on card.data existing
+		if cardtype is Spell and data.getTag(GameTag.SECRET):
+			cardtype = Secret
+		card = cardtype(id)
+		# cardtype(id) triggers __init__, so we can't rely on card.data existing
 		# so instead we super __init__ here and initialize tags then.
 		super(Card, cls).__init__(card)
 		card.data = data
@@ -42,6 +42,12 @@ class Card(Entity):
 				# A bit of magic powder to pass the Card object as self to the Card defs
 				func = getattr(data.__class__, event)
 				card._eventListeners[event].append(lambda *args: func(card, *args))
+		# Enrage. Hacky.
+		if hasattr(card.data, "Enrage"):
+			# Enrage is a card of its own, but it's an internal buff card so it doesn't
+			# have an ID or behave as a real card outside of providing a slot.
+			Enrage = type("Enrage", (Card, card.data.Enrage), {})
+			card._enrage = Enrage("PlaceholderCard")
 		return card
 
 	def __init__(self, id):
@@ -84,6 +90,7 @@ class Card(Entity):
 	overload = _TAG(GameTag.RECALL, 0)
 	windfury = _TAG(GameTag.WINDFURY, False)
 	hasCombo = _TAG(GameTag.COMBO, False)
+	enrage = _TAG(GameTag.ENRAGED, False)
 
 	@property
 	def zone(self):
@@ -138,6 +145,8 @@ class Card(Entity):
 		if self.weapon:
 			assert self.type == CardType.HERO
 			ret.append(self.weapon)
+		if self.enrage and self.damage:
+			ret.append(self._enrage)
 		ret += self.buffs
 		return ret
 
@@ -314,6 +323,10 @@ class Character(Card):
 		# FIXME this should happen in a separate tick
 		if not self.health:
 			self.destroy()
+
+		# Enrage implementation. Maybe a bit hacky.
+		if hasattr(self.data, "Enrage"):
+			self._enrage = self.data.Enrage()
 
 	def SELF_HEAL(self, source, amount):
 		self.damage -= amount
