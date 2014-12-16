@@ -161,31 +161,6 @@ class EX1_597(Card):
 		self.controller.summon("EX1_598")
 
 
-# Nerubian Egg
-class FP1_007(Card):
-	deathrattle = summonMinion("FP1_007t")
-
-
-# Deathlord
-class FP1_009(Card):
-	def deathrattle(self):
-		minions = self.controller.opponent.deck.filterByType(CardType.MINION)
-		if minions:
-			self.controller.opponent.summon(random.choice(minions))
-
-
-# Sludge Belcher
-class FP1_012(Card):
-	deathrattle = summonMinion("FP1_012t")
-
-
-# Wailing Soul
-class FP1_016(Card):
-	def action(self):
-		for target in self.controller.field:
-			target.silence()
-
-
 # Knife Juggler
 class NEW1_019(Card):
 	def OWN_MINION_SUMMONED(self, minion):
