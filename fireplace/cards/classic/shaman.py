@@ -3,14 +3,6 @@ from ..utils import *
 ##
 # Minions
 
-# Healing Totem
-class NEW1_009:
-	def OWN_TURN_END(self):
-		targets = self.controller.getTargets(TARGET_FRIENDLY_MINIONS)
-		for target in targets:
-			self.heal(target, 1)
-
-
 # Fire Elemental
 class CS2_042:
 	action = damageTarget(3)
