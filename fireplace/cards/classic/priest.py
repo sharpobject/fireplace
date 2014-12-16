@@ -59,31 +59,21 @@ class EX1_623e:
 	Health = 3
 
 
-# Dark Cultist
-class FP1_023:
-	def deathrattle(self):
-		if self.controller.field:
-			random.choice(self.controller.field).buff("FP1_023e")
-
-class FP1_023e:
-	Health = 3
-
-
 ##
 # Spells
 
 # Power Word: Shield
-class CS2_004(Card):
+class CS2_004:
 	def action(self, target):
 		target.buff("CS2_004e")
 		self.controller.draw()
 
-class CS2_004e(Card):
+class CS2_004e:
 	Health = 2
 
 
 # Holy Nova
-class CS1_112(Card):
+class CS1_112:
 	def action(self):
 		for target in self.controller.getTargets(TARGET_ALL_CHARACTERS):
 			if target.controller == self.controller:
@@ -93,35 +83,35 @@ class CS1_112(Card):
 
 
 # Mind Control
-class CS1_113(Card):
+class CS1_113:
 	def action(self, target):
 		self.controller.takeControl(target)
 
 
 # Mind Vision
-class CS2_003(Card):
+class CS2_003:
 	def action(self):
 		if self.controller.opponent.hand:
 			self.controller.give(random.choice(self.controller.opponent.hand).id)
 
 
 # Shadow Word: Pain
-class CS2_234(Card):
+class CS2_234:
 	action = destroyTarget
 
 
 # Mind Blast
-class DS1_233(Card):
+class DS1_233:
 	action = damageEnemyHero(5)
 
 
 # Silence
-class EX1_332(Card):
+class EX1_332:
 	action = silenceTarget
 
 
 # Thoughtsteal
-class EX1_339(Card):
+class EX1_339:
 	def action(self):
 		deck = self.controller.opponent.deck
 		for card in random.sample(deck, min(len(deck), 2)):
@@ -129,7 +119,7 @@ class EX1_339(Card):
 
 
 # Mindgames
-class EX1_345(Card):
+class EX1_345:
 	def action(self):
 		creatures = [c for c in self.controller.opponent.deck if c.type == CardType.MINION]
 		if creatures:
@@ -140,19 +130,19 @@ class EX1_345(Card):
 
 
 # Circle of Healing
-class EX1_621(Card):
+class EX1_621:
 	def action(self):
 		for target in self.controller.getTargets(TARGET_ALL_MINIONS):
 			self.heal(target, 4)
 
 
 # Shadow Word: Death
-class EX1_622(Card):
+class EX1_622:
 	action = destroyTarget
 
 
 # Holy Fire
-class EX1_624(Card):
+class EX1_624:
 	def action(self, target):
 		self.hit(target, 5)
 		self.heal(self.controller.hero, 5)

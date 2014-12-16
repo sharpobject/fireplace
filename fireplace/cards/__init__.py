@@ -10,7 +10,7 @@ from importlib import import_module
 with open(os.path.join(os.path.dirname(__file__), "db.json"), "r") as f:
 	_db = json.load(f)
 
-for set in ("classic", ):
+for set in ("classic", "naxxramas"):
 	module = import_module("." + set, package="fireplace.cards")
 	for k, cls in module.__dict__.items():
 		if not k.startswith("_"):
