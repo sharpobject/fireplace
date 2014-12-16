@@ -1,6 +1,4 @@
-from ...card import *
-from fireplace.enums import Race
-
+from ..utils import *
 
 # Big Game Hunter
 class EX1_005:

@@ -1,6 +1,4 @@
-import random
-from ...card import *
-from fireplace.enums import CardType, Race
+from ..utils import *
 
 
 # Injured Blademaster

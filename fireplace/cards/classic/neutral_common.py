@@ -1,6 +1,4 @@
-from fireplace.enums import GameTag, Race
-from ...card import *
-
+from ..utils import *
 
 ##
 # Free basic minions

@@ -1,6 +1,4 @@
-import random
-from fireplace.enums import CardType
-from ...card import *
+from ..utils import *
 
 
 # The Black Knight
