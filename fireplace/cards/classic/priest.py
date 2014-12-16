@@ -1,10 +1,5 @@
-import random
-from fireplace.enums import CardType
-
-
 ##
 # Minions
-
 
 # Northshire Cleric
 class CS2_235:

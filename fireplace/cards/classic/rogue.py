@@ -22,13 +22,6 @@ class EX1_613e:
 	Health = 2
 
 
-# Anub'ar Ambusher
-class FP1_026:
-	def deathrattle(self):
-		if self.controller.field:
-			random.choice(self.controller.field).bounce()
-
-
 # Kidnapper
 class NEW1_005:
 	combo = bounceTarget
