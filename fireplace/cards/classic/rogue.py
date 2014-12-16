@@ -120,3 +120,12 @@ class NEW1_004:
 	def action(self):
 		for target in self.controller.getTargets(TARGET_ALL_MINIONS):
 			target.bounce()
+
+
+##
+# Weapons
+
+# Perdition's Blace
+class EX1_133:
+	action = damageTarget(1)
+	combo = damageTarget(2)

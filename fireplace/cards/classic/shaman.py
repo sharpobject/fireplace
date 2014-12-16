@@ -160,3 +160,11 @@ class EX1_259:
 	def action(self):
 		for target in self.controller.opponent.field:
 			self.hit(target, random.choice((2, 3)))
+
+
+##
+# Weapons
+
+# Doomhammer
+class EX1_567:
+	Recall = 2

@@ -40,3 +40,13 @@ class FP1_025:
 	def action(self, target):
 		target.destroy()
 		self.controller.summon(target.id)
+
+
+##
+# Weapons
+
+# Death's Bite
+class FP1_021:
+	def deathrattle(self):
+		for target in self.controller.game.board:
+			self.hit(target, 1)

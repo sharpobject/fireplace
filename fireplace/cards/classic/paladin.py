@@ -82,3 +82,17 @@ class EX1_365:
 class EX1_371:
 	def action(self, target):
 		target.shield = True
+
+
+##
+# Weapons
+
+# Sword of Justice
+class EX1_366:
+	def OWN_MINION_SUMMONED(self, minion):
+		minion.buff("EX1_366e")
+		self.durability -= 1
+
+class EX1_366e:
+	Atk = 1
+	Health = 1
